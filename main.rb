@@ -85,7 +85,7 @@ def print_rentals
     puts('No rentals for this person')
   else
     person.rentals.each do |rent|
-      puts("Date: #{rent.date}, Book: #{rent.book.title} by #{rent.book.title}")
+      puts("Date: #{rent.date}, Book: #{rent.book.title} by #{rent.author.name}")
     end
   end
 end
