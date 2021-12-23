@@ -15,7 +15,7 @@ This is a library app that can help the librarian to record what books are in th
 
 - git clone git@github.com:lilyfrancis/oop-school-library.git
 - cd oop-school-library-app
-## Authors
+## Author
 
 👤 **Lilian Francis**
 
