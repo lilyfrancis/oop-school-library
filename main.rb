@@ -29,7 +29,6 @@ class Main
     print INPUT_MSG
   end
 
-  # rubocop:disable Metrics
   def select_option
     case @main_ans
     when 1
@@ -54,9 +53,7 @@ class Main
     end
   end
 
-  # rubocop:enable Metrics
-
-  def user_person_input
+    def user_person_input
     decision = 0
     until [1, 2].include?(decision)
       puts 'Do you want to create a student (1), or a teacher (2)?'
