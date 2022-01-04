@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module App
-  INPUT_MSG = 'Enter an option number here: '.freeze
-  ENTER_MSG = 'Press ENTER to continue'.freeze
+  INPUT_MSG = 'Enter an option number here: '
+  ENTER_MSG = 'Press ENTER to continue'
 
   def enter_msg
     print ENTER_MSG

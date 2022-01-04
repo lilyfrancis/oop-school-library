@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'student'
 require_relative 'teacher'
 require_relative 'classroom'
@@ -19,13 +21,11 @@ class Main
 
   def show_options
     puts 'Please choose an option by entering a number:'
-    puts '1 - List all books'
-    puts '2 - List all people'
-    puts '3 - Create a person'
-    puts '4 - Create a book'
-    puts '5 - Create a rental'
-    puts '6 - List all rentals for a given person ID'
-    puts '7 - Exit'
+    temp = ['1 - List all books', '2 - List all people', '3 - Create a person', '4 - Create a book', '5 - Create a rental',
+            '6 - List all rentals for a given person ID', '7 - Exit']
+    temp.each do |item|
+      puts item
+    end
     print INPUT_MSG
   end
 
@@ -53,7 +53,7 @@ class Main
     end
   end
 
-    def user_person_input
+  def user_person_input
     decision = 0
     until [1, 2].include?(decision)
       puts 'Do you want to create a student (1), or a teacher (2)?'
