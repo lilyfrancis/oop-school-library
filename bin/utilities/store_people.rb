@@ -1,3 +1,4 @@
+# rubocop:disable Style/FileWrite
 require 'json'
 
 class StorePeopleClass
@@ -29,3 +30,4 @@ class StorePeopleClass
     end
   end
 end
+# rubocop:enable Style/FileWrite
