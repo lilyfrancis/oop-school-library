@@ -20,11 +20,11 @@ class StorePeopleClass
     File.new('./data/students.json', 'w+') unless File.exist?('./data/students.json')
     File.new('./data/teachers.json', 'w+') unless File.exist?('./data/teachers.json')
 
-    File.write('./data/students.json') do |f|
+    File.open('./data/students.json', 'w') do |f|
       f.write(students.to_json)
     end
 
-    File.write('./data/teachers.json') do |f|
+    File.open('./data/teachers.json', 'w') do |f|
       f.write(teachers.to_json)
     end
   end

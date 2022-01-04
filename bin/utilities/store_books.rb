@@ -11,7 +11,7 @@ class StoreBooksClass
       data.push([book.title, book.author])
     end
     File.new('./data/books.json', 'w+') unless File.exist?('./data/books.json')
-    File.write('./data/books.json') do |f|
+     File.open('./data/books.json', 'w') do |f|
       f.write(data.to_json)
     end
   end

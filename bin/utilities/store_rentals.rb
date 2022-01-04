@@ -11,7 +11,7 @@ class StoreRentalsClass
       data.push([rental.date, rental.book.title, rental.person.name])
     end
     File.new('./data/rentals.json', 'w+') unless File.exist?('./data/rentals.json')
-    File.write('./data/rentals.json') do |f|
+    File.open('./data/rentals.json' , 'w') do |f|
       f.write(data.to_json)
     end
   end
