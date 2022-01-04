@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/CyclomaticComplexity
 require_relative 'student'
 require_relative 'teacher'
 require_relative 'classroom'
@@ -20,17 +21,14 @@ class Main
 
   def show_options
     puts 'Please choose an option by entering a number:'
-    puts '1 - List all books'
-    puts '2 - List all people'
-    puts '3 - Create a person'
-    puts '4 - Create a book'
-    puts '5 - Create a rental'
-    puts '6 - List all rentals for a given person ID'
-    puts '7 - Exit'
+    temp = ['List all books', 'List all people', 'Create a person', 'Create a book', 'Create a rental',
+            'List all rentals for a given person ID', 'Exit']
+    temp.each_with_index do |item, idx|
+      puts "#{idx + 1} - #{item}"
+    end
     print INPUT_MSG
   end
 
-  # rubocop:disable Metrics
   def select_option
     case @main_ans
     when 1
@@ -39,14 +37,11 @@ class Main
     when 2
       display_people
       enter_msg
-    when 3
-      user_person_input
-    when 4
-      user_book_input
+    when 3 then user_person_input
+    when 4 then user_book_input
     when 5
       user_rental_input unless @books.empty? && @people.empty?
-    when 6
-      user_rental_id_input
+    when 6 then user_rental_id_input
     else
       if @main_ans != 7
         puts 'Invalid input, please try again'
@@ -54,8 +49,6 @@ class Main
       end
     end
   end
-
-  # rubocop:enable Metrics
 
   def user_person_input
     decision = 0
