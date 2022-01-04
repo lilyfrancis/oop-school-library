@@ -1,149 +1,132 @@
-require './student'
-require './teacher'
-require './book'
-require './rental'
+# rubocop:disable Metrics/CyclomaticComplexity
+require_relative 'student'
+require_relative 'teacher'
+require_relative 'classroom'
+require_relative 'book'
+require_relative 'rental'
+require_relative 'app'
 
-def create_student(age, name)
-  print('Has Parent Permission [y/n]:')
-  permission = gets.chomp
-  if permission == 'y'
-    Student.new(age, name)
-  else
-    Student.new(age, name, parent_permission: false)
+class Main
+  include App
+
+  def initialize
+    @main_ans = 0
+    @books = []
+    @people = []
+
+    puts 'Welcome to School Library App!'
+    puts
   end
-end
 
-def create_teacher(age, name)
-  print('Specialization:')
-  specialization = gets.chomp
-  Teacher.new(age, specialization, name)
-end
-
-def create_person
-  print('Do you want to create a student(1) or a Teacher (2) [Input the number]:')
-  input = gets.chomp
-  print('age:')
-  age = gets.chomp
-  print('Name:')
-  name = gets.chomp
-  case input
-  when '1'
-    @persons << create_student(age, name)
-  when '2'
-    @persons << create_teacher(age, name)
-  else
-    puts('Wrong Input')
-    create_person
+  def show_options
+    puts 'Please choose an option by entering a number:'
+    temp = ['List all books', 'List all people', 'Create a person', 'Create a book', 'Create a rental',
+            'List all rentals for a given person ID', 'Exit']
+    temp.each_with_index do |item, idx|
+      puts "#{idx + 1} - #{item}"
+    end
+    print INPUT_MSG
   end
-  puts('Person Created succefully')
-end
 
-def create_book
-  print('title:')
-  title = gets.chomp
-  print('Author:')
-  author = gets.chomp
-  @books << Book.new(title, author)
-  puts('Book Created succefully')
-end
-
-def list_books
-  i = 0
-  @books.each do |book|
-    puts("#{i}) title: #{book.title}, author: #{book.author}")
-    i += 1
-  end
-end
-
-def list_persons
-  i = 0
-  @persons.each do |person|
-    if person.is_a?(Teacher)
-      print '[Teacher] '
+  def select_option
+    case @main_ans
+    when 1
+      display_books
+      enter_msg
+    when 2
+      display_people
+      enter_msg
+    when 3 then user_person_input
+    when 4 then user_book_input
+    when 5
+      user_rental_input unless @books.empty? && @people.empty?
+    when 6 then user_rental_id_input
     else
-      print '[Student] '
-    end
-    puts("#{i}) Name: #{person.name}, ID: #{person.id}, Age: #{person.age}")
-    i += 1
-  end
-end
-
-def person_object(id)
-  @persons.each do |person|
-    return person if person.id == id
-  end
-  nil
-end
-
-def print_rentals
-  print('Person ID: ')
-  id = gets.chomp.to_i
-  person = person_object(id)
-  if person.nil?
-    puts('Wrong Id')
-  elsif person.rentals == []
-    puts('No rentals for this person')
-  else
-    person.rentals.each do |rent|
-      puts("Date: #{rent.date}, Book: #{rent.book.title} by #{rent.author.name}")
+      if @main_ans != 7
+        puts 'Invalid input, please try again'
+        puts
+      end
     end
   end
-end
 
-def create_new_rental
-  puts('Select a book from following list by number:')
-  list_books
-  book_index = gets.chomp.to_i
-  puts('Select a person from following list by number:')
-  list_persons
-  person_index = gets.chomp.to_i
-  print('Date: ')
-  date = gets.chomp
-  Rental.new(date, @persons[person_index], @books[book_index])
-  puts('Rental created succefully')
-end
+  def user_person_input
+    decision = 0
+    until [1, 2].include?(decision)
+      puts 'Do you want to create a student (1), or a teacher (2)?'
+      print INPUT_MSG
+      decision = gets.chomp.to_i
+      next if [1, 2].include?(decision)
 
-def handle_input(number)
-  case number
-  when 1
-    list_books
-  when 2
-    list_persons
-  when 3
-    create_person
-  when 4
-    create_book
-  when 5
-    create_new_rental
-  when 6
-    print_rentals
-  else
-    puts 'Thank you for using our APP - Writed by Ahzia'
-    exit
+      puts
+      puts 'Invalid input, please try again'
+      puts
+    end
+    print 'Age: '
+    age = gets.chomp.to_i
+    print 'Name: '
+    name = gets.chomp
+    create_person(decision, age, name)
+  end
+
+  def user_book_input
+    puts 'Please, enter book information below:'
+    print 'Title:'
+    title = gets.chomp
+    print 'Author: '
+    author = gets.chomp
+    create_book(title, author)
+  end
+
+  def user_rental_input
+    puts 'Select a book from the following list:'
+    display_books
+    print INPUT_MSG
+    book_index = gets.chomp.to_i
+    puts
+    puts 'Select a person form the following list:'
+    display_people
+    print INPUT_MSG
+    person_index = gets.chomp.to_i
+    puts
+    print 'Enter date of retrieval: '
+    date = gets.chomp
+    create_rental(book_index, person_index, date)
+  end
+
+  def user_rental_id_input
+    loop do
+      print 'Enter the person\'s ID: '
+      display_people
+      person_input = gets.chomp.to_i
+      display_rentals(person_input)
+      break if person_input
+    end
+  end
+
+  def create_student_input(age, name)
+    print 'Has parent permission? [Y/N]: '
+    permission = gets.chomp.upcase
+    permission = permission != 'N'
+    create_student(age, name, permission)
+  end
+
+  def create_teacher_input(age, name)
+    print 'Specialty --> '
+    specialty = gets.chomp
+    create_teacher(age, name, specialty)
+  end
+
+  def main
+    until @main_ans == 7
+      show_options
+      @main_ans = gets.chomp.to_i
+      puts
+      select_option
+    end
+    puts 'Exiting session'
+    puts 'Thank you for using the Library School App!'
   end
 end
 
-def print_message
-  puts('please choose an option by entering a number:')
-  puts('1 - List all books')
-  puts('2 - List all people')
-  puts('3 - Create a person')
-  puts('4 - Create a book')
-  puts('5 - Create a rental')
-  puts('6 - List all rental for a given person id')
-  puts('7 - Exit')
-  number = gets.chomp.to_i
-  handle_input(number)
-  puts('')
-  print_message
-end
-
-def main
-  @books = []
-  @persons = []
-  puts('Welcome to School library App!')
-  puts('')
-  print_message
-end
-
-main
+Main.new.main
+# rubocop:enable Metrics/CyclomaticComplexity
