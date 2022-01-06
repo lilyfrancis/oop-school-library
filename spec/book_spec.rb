@@ -7,7 +7,7 @@ require_relative '../student'
 
 describe 'Book' do
   before :each do
-    @book = Book.new('Think Again', 'Lily')
+    @book = Book.new('Think Again', 'Donard')
   end
 
   describe '#new' do
@@ -24,7 +24,7 @@ describe 'Book' do
 
   describe '#author' do
     it 'should return the book author' do
-      expect(@book.author).to eql 'Lily'
+      expect(@book.author).to eql 'Donard'
     end
   end
 
